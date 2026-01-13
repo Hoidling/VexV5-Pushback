@@ -154,12 +154,20 @@ task rc_auto_loop_task_Controller1(rc_auto_loop_function_Controller1);
 //for auton/auton setup
 int autonSide = 0; // 0 = left, 1 = right
 
+bool robotConnected = false;
+double wheelTravelInches = 2.75;  // VEX 2.75" wheels (converts to mm in smartdrive)
+double trackWidthMM = 320.0;      // Distance between left/right wheel centers (measure with calipers)
+double wheelBaseMM = 40.0;        // Distance between front/back wheels (⚠️ verify this value)
+
 // Motor groups
 motor_group LeftDriveSmart(leftMotorA, leftMotorB, leftMotorC);
 motor_group RightDriveSmart(rightMotorA, rightMotorB, rightMotorC);
 
-// Smartdrive
-smartdrive Drivetrain(LeftDriveSmart, RightDriveSmart, TheMalfunctioner, 319.19, 320, 40, mm, 1);
+// Smartdrive Configuration
+// wheelTravel: 2.75" wheels = 69.85mm diameter × π = 217mm (converted from wheelTravelInches)
+// trackWidth: distance between left/right wheel centers (from trackWidthMM variable)
+// wheelBase: distance between front/back wheels (from wheelBaseMM variable)
+smartdrive Drivetrain(LeftDriveSmart, RightDriveSmart, TheMalfunctioner, wheelTravelInches * 3.14159265359 * 25.4, trackWidthMM, wheelBaseMM, mm, 1);
 
 competition Competition;
 bool isreversed = false;
@@ -587,7 +595,7 @@ void autonomous() {
     Drivetrain.turnFor(right, 45, degrees);
     Drivetrain.driveFor(forward, 450, mm);//maybe a bit more bc the fwd 500 not 600
     Drivetrain.turnFor(left, 90, degrees);
-    Drivetrain.drive(forward);
+    Drivetrain.driveFor(forward, 300, mm); // Fixed: was Drivetrain.drive(forward) - requires distance
   }
 }
 
