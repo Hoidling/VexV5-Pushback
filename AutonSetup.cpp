@@ -130,6 +130,9 @@ task rc_auto_loop_task_Controller1(rc_auto_loop_function_Controller1);
 //CHANGE IF U GOT A ROBOT
 
 bool robotConnected = false;
+double wheelTravelInches = 2.75;  // VEX 2.75" wheels (converts to mm in smartdrive)
+double trackWidthMM = 320.0;      // Distance between left/right wheel centers (measure with calipers)
+double wheelBaseMM = 40.0;        // Distance between front/back wheels (⚠️ verify this value)
 
 #pragma region Base Setup
 //for auton/auton setup
@@ -187,8 +190,11 @@ bool exportSuccessShown = false;  // Track if export message has been shown
 motor_group LeftDriveSmart(leftMotorA, leftMotorB, leftMotorC);
 motor_group RightDriveSmart(rightMotorA, rightMotorB, rightMotorC);
 
-// Smartdrive
-smartdrive Drivetrain(LeftDriveSmart, RightDriveSmart, TheMalfunctioner, 319.19, 320, 40, mm, 1);
+// Smartdrive Configuration
+// wheelTravel: 2.75" wheels = 69.85mm diameter × π = 217mm (converted from wheelTravelInches)
+// trackWidth: distance between left/right wheel centers (from trackWidthMM variable)
+// wheelBase: distance between front/back wheels (from wheelBaseMM variable)
+smartdrive Drivetrain(LeftDriveSmart, RightDriveSmart, TheMalfunctioner, wheelTravelInches * 3.14159265359 * 25.4, trackWidthMM, wheelBaseMM, mm, 1);
 
 competition Competition;
 #pragma endregion Base Setup
